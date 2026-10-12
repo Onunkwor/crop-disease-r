@@ -1,0 +1,275 @@
+[
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Get set up",
+    "section": "",
+    "text": "You need two things: R, which does the calculations, and a place to type and run it. Choose one of the two options below."
+  },
+  {
+    "objectID": "setup.html#option-a-in-your-browser-recommended",
+    "href": "setup.html#option-a-in-your-browser-recommended",
+    "title": "Get set up",
+    "section": "Option A: in your browser (recommended)",
+    "text": "Option A: in your browser (recommended)\nNothing to install, and it works on any laptop with a web browser.\n\nGo to posit.cloud and create a free account.\nClick New Project, then New RStudio Project.\nIn the panel called Console, paste this line and press Enter. It installs the packages the workshop uses, and takes a few minutes the first time:\n\ninstall.packages(c(\"readxl\", \"dplyr\", \"tidyr\", \"ggplot2\", \"epifitter\", \"lme4\"))\n\nDownload the two data files from Data and credits and upload them using the Upload button in the Files panel. Put them in a folder called data."
+  },
+  {
+    "objectID": "setup.html#option-b-on-your-own-computer",
+    "href": "setup.html#option-b-on-your-own-computer",
+    "title": "Get set up",
+    "section": "Option B: on your own computer",
+    "text": "Option B: on your own computer\n\nInstall R from cran.r-project.org.\nInstall RStudio Desktop (free) from posit.co/download/rstudio-desktop.\nOpen RStudio and run the same install.packages(...) line as in Option A.\nMake a folder for the workshop with a data folder inside it, and save the two data files there."
+  },
+  {
+    "objectID": "setup.html#check-that-it-works",
+    "href": "setup.html#check-that-it-works",
+    "title": "Get set up",
+    "section": "Check that it works",
+    "text": "Check that it works\nPaste this into the console. If it prints the number of fields in the survey, you are ready.\nlibrary(readxl)\nfield &lt;- read_excel(\"data/cassava_mosaic_survey.xlsx\", sheet = \"Field\")\nnrow(field)\nIt should print 512."
+  },
+  {
+    "objectID": "setup.html#if-you-get-stuck",
+    "href": "setup.html#if-you-get-stuck",
+    "title": "Get set up",
+    "section": "If you get stuck",
+    "text": "If you get stuck\nDo not worry if something does not install the first time; it happens to everyone. Bring the error message to the first session, and we will fix it together in the first ten minutes."
+  },
+  {
+    "objectID": "session1.html",
+    "href": "session1.html",
+    "title": "1. Reading disease data",
+    "section": "",
+    "text": "Cassava mosaic disease is caused by viruses that turn cassava leaves into a yellow-green patchwork and stunt the plant. It reaches a field in two ways:\n\nin the planting material, when farmers plant stem cuttings taken from infected plants, or\nby whiteflies, which carry the virus from plant to plant as they feed.\n\nIn 2015 and 2017, researchers from the Central and West African Virus Epidemiology (WAVE) programme’s hub at Covenant University walked 512 cassava fields across 13 states in South-West and North-Central Nigeria and recorded what they saw. Their data are free for anyone to use. Today we use them to answer two questions: how much disease was there, and where did it come from?"
+  },
+  {
+    "objectID": "session1.html#the-question",
+    "href": "session1.html#the-question",
+    "title": "1. Reading disease data",
+    "section": "",
+    "text": "Cassava mosaic disease is caused by viruses that turn cassava leaves into a yellow-green patchwork and stunt the plant. It reaches a field in two ways:\n\nin the planting material, when farmers plant stem cuttings taken from infected plants, or\nby whiteflies, which carry the virus from plant to plant as they feed.\n\nIn 2015 and 2017, researchers from the Central and West African Virus Epidemiology (WAVE) programme’s hub at Covenant University walked 512 cassava fields across 13 states in South-West and North-Central Nigeria and recorded what they saw. Their data are free for anyone to use. Today we use them to answer two questions: how much disease was there, and where did it come from?"
+  },
+  {
+    "objectID": "session1.html#first-steps-in-r-15-minutes",
+    "href": "session1.html#first-steps-in-r-15-minutes",
+    "title": "1. Reading disease data",
+    "section": "First steps in R (15 minutes)",
+    "text": "First steps in R (15 minutes)\nIf you have never used R, start here. Type each line into the console and press Enter.\nR is a calculator:\n\n2 + 3\n\n[1] 5\n\n\nYou can store a result under a name with &lt;-, and use the name later:\n\nplants &lt;- 100\ndiseased &lt;- 40\ndiseased / plants\n\n[1] 0.4\n\n\nA function does a job. You give it something in brackets, and it gives an answer back:\n\nheights &lt;- c(12, 15, 9, 20)   # c() combines numbers into a list\nmean(heights)\n\n[1] 14\n\nmax(heights)\n\n[1] 20\n\n\nA table of data is called a data frame. Each row is one thing (here, one field) and each column is one measurement. You will meet one in a moment.\nPackages add extra tools. You install them once (see Get set up), and switch them on each session with library().\nThat is all you need for today."
+  },
+  {
+    "objectID": "session1.html#load-the-data",
+    "href": "session1.html#load-the-data",
+    "title": "1. Reading disease data",
+    "section": "Load the data",
+    "text": "Load the data\n\nlibrary(readxl)\nlibrary(dplyr)\nlibrary(ggplot2)\n\nfield &lt;- read_excel(\"data/cassava_mosaic_survey.xlsx\", sheet = \"Field\")\nnrow(field)\n\n[1] 512\n\nnames(field)\n\n [1] \"Year\"               \"Field\"              \"Country\"           \n [4] \"State\"              \"Altitude\"           \"Mean_CMD_Severity\" \n [7] \"CMD_Incidence\"      \"Cutting_Infection\"  \"Whitefly_Infection\"\n[10] \"Total_whitefly\"    \n\n\nEach row is one field. The columns we need:\n\n\n\n\n\n\n\nColumn\nWhat it means\n\n\n\n\nYear\n2015 or 2017\n\n\nState\nthe state the field is in\n\n\nCMD_Incidence\nthe share of plants in the field showing symptoms, from 0 to 1\n\n\nMean_CMD_Severity\nhow bad the symptoms were, on a 1 to 5 scale, averaged over the diseased plants\n\n\nCutting_Infection\nthe share of the infection that came in with the planting material\n\n\nWhitefly_Infection\nthe share that was carried in by whiteflies\n\n\nTotal_whitefly\nhow many whiteflies were counted in the field"
+  },
+  {
+    "objectID": "session1.html#incidence-and-severity-are-different-things",
+    "href": "session1.html#incidence-and-severity-are-different-things",
+    "title": "1. Reading disease data",
+    "section": "Incidence and severity are different things",
+    "text": "Incidence and severity are different things\nThese two words get mixed up all the time, so it is worth being precise:\n\nIncidence asks how many plants are diseased. A field with 40 sick plants out of 100 has an incidence of 0.4.\nSeverity asks how badly a plant is affected. A plant can be diseased but only mildly.\n\nA field can have high incidence and low severity (many plants, mild symptoms), or the reverse. You need both to describe an outbreak.\nCassava mosaic severity is scored on a 1 to 5 scale, from 1 (no symptoms) to 5 (severe mosaic, distorted leaves and a stunted plant). The numbers are ordered categories, not measurements: a score of 4 is worse than a 2, but it is not “twice as bad”. Keep that in mind whenever you average scores like these."
+  },
+  {
+    "objectID": "session1.html#how-much-disease-was-there",
+    "href": "session1.html#how-much-disease-was-there",
+    "title": "1. Reading disease data",
+    "section": "How much disease was there?",
+    "text": "How much disease was there?\n\nfield |&gt;\n  group_by(Year) |&gt;\n  summarise(\n    fields         = n(),\n    mean_incidence = mean(CMD_Incidence),\n    mean_severity  = mean(Mean_CMD_Severity, na.rm = TRUE)\n  )\n\n# A tibble: 2 × 4\n   Year fields mean_incidence mean_severity\n  &lt;dbl&gt;  &lt;int&gt;          &lt;dbl&gt;         &lt;dbl&gt;\n1  2015    184          0.438          2.73\n2  2017    328          0.122          2.15\n\n\nIn 2015, on average 44% of plants in a field showed symptoms. By 2017 that had fallen to about 12%.\nA picture shows the spread across fields, not just the average:\n\nggplot(field, aes(x = factor(Year), y = CMD_Incidence)) +\n  geom_boxplot(fill = \"#d8e9d0\") +\n  labs(x = \"Survey year\", y = \"Share of plants with symptoms\",\n       title = \"Cassava mosaic incidence in 512 Nigerian fields\") +\n  theme_minimal()"
+  },
+  {
+    "objectID": "session1.html#where-did-the-infection-come-from",
+    "href": "session1.html#where-did-the-infection-come-from",
+    "title": "1. Reading disease data",
+    "section": "Where did the infection come from?",
+    "text": "Where did the infection come from?\nThe route of infection is only recorded for fields that had some disease, so we keep just those:\n\ndiseased &lt;- field |&gt; filter(CMD_Incidence &gt; 0)\nnrow(diseased)\n\n[1] 360\n\nsummary(diseased$Cutting_Infection)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n 0.0000  0.7088  0.9091  0.8070  1.0000  1.0000 \n\n\nThe median field got about 91% of its infection from the planting material. Let us count how many fields got at least half of it that way, and how many got more than half:\n\ndiseased |&gt;\n  summarise(\n    fields              = n(),\n    at_least_half       = mean(Cutting_Infection &gt;= 0.5),\n    more_than_half      = mean(Cutting_Infection &gt; 0.5)\n  )\n\n# A tibble: 1 × 3\n  fields at_least_half more_than_half\n   &lt;int&gt;         &lt;dbl&gt;          &lt;dbl&gt;\n1    360           0.9           0.85\n\n\nIn nine out of ten diseased fields, at least half of the disease was planted, not caught, and in 85% it was more than half. Notice how much the wording matters: “at least half” and “more than half” give different numbers, because 18 fields sit at exactly 50%. That changes what a farmer should do: the first defence is clean planting material, not spraying for whiteflies."
+  },
+  {
+    "objectID": "session1.html#your-turn",
+    "href": "session1.html#your-turn",
+    "title": "1. Reading disease data",
+    "section": "Your turn",
+    "text": "Your turn\n\n\n\n\n\n\nNoteExercise 1\n\n\n\nWhich state had the highest average incidence in 2017?\n\n\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\n\nfield |&gt;\n  filter(Year == 2017) |&gt;\n  group_by(State) |&gt;\n  summarise(mean_incidence = mean(CMD_Incidence), fields = n()) |&gt;\n  arrange(desc(mean_incidence))\n\n# A tibble: 13 × 3\n   State     mean_incidence fields\n   &lt;chr&gt;              &lt;dbl&gt;  &lt;int&gt;\n 1 Benue             0.264      34\n 2 Lagos             0.207       9\n 3 Niger             0.2        13\n 4 Ogun              0.181      36\n 5 FCT               0.167       2\n 6 Nassarawa         0.119      30\n 7 Ekiti             0.103      20\n 8 Oyo               0.0913     50\n 9 Ondo              0.0846     39\n10 Kwara             0.0817     20\n11 Kogi              0.0667     32\n12 Plateau           0.0606     11\n13 Osun              0.0604     32\n\n\nCheck the fields column too: an average from three fields is much less reliable than one from fifty.\n\n\n\n\n\n\n\n\n\nNoteExercise 2\n\n\n\nDo fields with more whiteflies get more of their infection from whiteflies? Make a plot of Total_whitefly against Whitefly_Infection for the diseased fields.\n\n\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\n\nggplot(diseased, aes(x = Total_whitefly + 1, y = Whitefly_Infection)) +\n  geom_point(alpha = 0.4) +\n  scale_x_log10() +\n  labs(x = \"Whiteflies counted (+1, log scale)\",\n       y = \"Share of infection from whiteflies\") +\n  theme_minimal()\n\n\n\n\n\n\n\ncor(diseased$Total_whitefly, diseased$Whitefly_Infection, method = \"spearman\")\n\n[1] 0.2969913\n\n\nThere is a link, but a loose one. The whitefly count is one visit on one day, while the symptoms record the whole season. A single count is a snapshot of something that keeps changing."
+  },
+  {
+    "objectID": "session1.html#what-to-take-away",
+    "href": "session1.html#what-to-take-away",
+    "title": "1. Reading disease data",
+    "section": "What to take away",
+    "text": "What to take away\n\nAlways ask how many (incidence) and how badly (severity) separately.\nTreat 1 to 5 scores as ordered categories, not measurements.\nA survey can tell you not only how much disease there is, but where it came from, and that decides what farmers should do about it."
+  },
+  {
+    "objectID": "session2.html",
+    "href": "session2.html",
+    "title": "2. How epidemics grow",
+    "section": "",
+    "text": "Picture a field of 100 leaves where one is infected. Spores from that one leaf land on the 99 healthy ones, so new infections appear slowly at first. As more leaves become infected, there are more sources of spores and the epidemic speeds up. But later there are few healthy leaves left to infect, so it slows down again.\nSo the speed of an epidemic depends on two things multiplied together:\n\nhow much disease there is to spread from (call it \\(y\\)), and\nhow much healthy tissue is left to spread to (\\(1 - y\\)).\n\n\n\n\nDiseased share \\(y\\)\nHealthy share \\(1-y\\)\nSources times targets\n\n\n\n\n0.01\n0.99\n0.0099 (slow)\n\n\n0.50\n0.50\n0.25 (fastest)\n\n\n0.99\n0.01\n0.0099 (slow again)\n\n\n\nSlow, then fast, then slow is the S-shaped curve. It is called the logistic model, and its formula is:\n\\[\ny(t) = \\frac{1}{1 + \\dfrac{1 - y_0}{y_0}\\, e^{-r t}}\n\\]\nwhere \\(y_0\\) is the share diseased at the start and \\(r\\) is how fast the epidemic grows.\n\nlibrary(ggplot2)\nlibrary(dplyr)\n\nlogistic &lt;- function(t, y0, r) 1 / (1 + ((1 - y0) / y0) * exp(-r * t))\n\ncurve_data &lt;- tibble(t = 0:40) |&gt;\n  mutate(slow = logistic(t, 0.01, 0.15),\n         fast = logistic(t, 0.01, 0.30))\n\nggplot(curve_data, aes(t)) +\n  geom_line(aes(y = slow, colour = \"r = 0.15\")) +\n  geom_line(aes(y = fast, colour = \"r = 0.30\")) +\n  labs(x = \"Days\", y = \"Share diseased\", colour = NULL,\n       title = \"Two logistic epidemics starting from 1% disease\") +\n  theme_minimal()"
+  },
+  {
+    "objectID": "session2.html#why-epidemics-speed-up-and-then-slow-down",
+    "href": "session2.html#why-epidemics-speed-up-and-then-slow-down",
+    "title": "2. How epidemics grow",
+    "section": "",
+    "text": "Picture a field of 100 leaves where one is infected. Spores from that one leaf land on the 99 healthy ones, so new infections appear slowly at first. As more leaves become infected, there are more sources of spores and the epidemic speeds up. But later there are few healthy leaves left to infect, so it slows down again.\nSo the speed of an epidemic depends on two things multiplied together:\n\nhow much disease there is to spread from (call it \\(y\\)), and\nhow much healthy tissue is left to spread to (\\(1 - y\\)).\n\n\n\n\nDiseased share \\(y\\)\nHealthy share \\(1-y\\)\nSources times targets\n\n\n\n\n0.01\n0.99\n0.0099 (slow)\n\n\n0.50\n0.50\n0.25 (fastest)\n\n\n0.99\n0.01\n0.0099 (slow again)\n\n\n\nSlow, then fast, then slow is the S-shaped curve. It is called the logistic model, and its formula is:\n\\[\ny(t) = \\frac{1}{1 + \\dfrac{1 - y_0}{y_0}\\, e^{-r t}}\n\\]\nwhere \\(y_0\\) is the share diseased at the start and \\(r\\) is how fast the epidemic grows.\n\nlibrary(ggplot2)\nlibrary(dplyr)\n\nlogistic &lt;- function(t, y0, r) 1 / (1 + ((1 - y0) / y0) * exp(-r * t))\n\ncurve_data &lt;- tibble(t = 0:40) |&gt;\n  mutate(slow = logistic(t, 0.01, 0.15),\n         fast = logistic(t, 0.01, 0.30))\n\nggplot(curve_data, aes(t)) +\n  geom_line(aes(y = slow, colour = \"r = 0.15\")) +\n  geom_line(aes(y = fast, colour = \"r = 0.30\")) +\n  labs(x = \"Days\", y = \"Share diseased\", colour = NULL,\n       title = \"Two logistic epidemics starting from 1% disease\") +\n  theme_minimal()"
+  },
+  {
+    "objectID": "session2.html#the-one-test-every-model-must-pass",
+    "href": "session2.html#the-one-test-every-model-must-pass",
+    "title": "2. How epidemics grow",
+    "section": "The one test every model must pass",
+    "text": "The one test every model must pass\nHere is a simple check that catches a surprising number of mistakes, including errors that get printed in textbooks. Put \\(t = 0\\) into the formula. The answer must be \\(y_0\\), the starting level, because that is what \\(y_0\\) means.\nBelow are two versions of the logistic formula. One is correct. The other was once printed in an open epidemiology textbook, before a reader reported the error and it was corrected:\n\ncorrect &lt;- function(t, y0, r) 1 / (1 + ((1 - y0) / y0) * exp(-r * t))\nprinted &lt;- function(t, y0, r) 1 / (1 + (1 - y0) * exp(-r * t))\n\ncorrect(t = 0, y0 = 0.01, r = 0.3)\n\n[1] 0.01\n\nprinted(t = 0, y0 = 0.01, r = 0.3)\n\n[1] 0.5025126\n\n\nThe correct version gives 0.01, which is what we started with. The printed one gives 0.50, claiming the field was already half diseased on day zero. Now look at day 15:\n\ncorrect(t = 15, y0 = 0.01, r = 0.3)\n\n[1] 0.476238\n\nprinted(t = 15, y0 = 0.01, r = 0.3)\n\n[1] 0.9891217\n\n\nThe printed formula says the crop is about 99% diseased when the truth is under half. A student who trusted it might give up on a field that could still be saved. One line of arithmetic, checking \\(t = 0\\), would have caught it."
+  },
+  {
+    "objectID": "session2.html#a-real-epidemic",
+    "href": "session2.html#a-real-epidemic",
+    "title": "2. How epidemics grow",
+    "section": "A real epidemic",
+    "text": "A real epidemic\nNow look at real data. The epifitter package comes with measurements of powdery mildew on tomato, taken every week:\n\nlibrary(epifitter)\n\nmildew &lt;- PowderyMildew |&gt;\n  filter(irrigation_type == \"Drip\", moisture == \"High moisture\") |&gt;\n  group_by(time) |&gt;\n  summarise(sev = mean(sev))\n\nggplot(mildew, aes(time, sev)) +\n  geom_point(size = 2) +\n  geom_line(alpha = 0.4) +\n  labs(x = \"Days\", y = \"Share of leaf diseased\",\n       title = \"Powdery mildew on tomato\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\nYou can see the epidemic building through the season. Fitting a curve to points like these gives you the growth rate \\(r\\), so you can compare epidemics fairly.\n\n\n\n\n\n\nNoteGoing further: fitting the curve (optional)\n\n\n\n\n\nfit_nlin() tries several standard curves and reports how well each fits. In the table, values closer to 1 in the CCC and r_squared columns mean a better fit.\n\nfits &lt;- fit_nlin(time = mildew$time, y = mildew$sev)\nfits$Stats\n\n                 CCC r_squared    RSE\nGompertz      0.9854    0.9716 0.0281\nLogistic      0.9756    0.9553 0.0358\nExponential   0.9590    0.9297 0.0454\nMonomolecular     NA        NA     NA\n\nplot_fit(fits) + theme_minimal()"
+  },
+  {
+    "objectID": "session2.html#one-number-for-a-whole-epidemic",
+    "href": "session2.html#one-number-for-a-whole-epidemic",
+    "title": "2. How epidemics grow",
+    "section": "One number for a whole epidemic",
+    "text": "One number for a whole epidemic\nTo compare epidemics, for example under two irrigation methods, it helps to sum up the whole curve in one number. The area under the disease progress curve (AUDPC) does that. A bigger area means more disease for longer.\n\nAUDPC(time = mildew$time, y = mildew$sev, y_proportion = TRUE)\n\n[1] 13.44233"
+  },
+  {
+    "objectID": "session2.html#your-turn",
+    "href": "session2.html#your-turn",
+    "title": "2. How epidemics grow",
+    "section": "Your turn",
+    "text": "Your turn\n\n\n\n\n\n\nNoteExercise\n\n\n\nUnder high moisture, the data include four irrigation methods. Which one had the most disease over the whole season?\n\n\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\n\nPowderyMildew |&gt;\n  filter(moisture == \"High moisture\") |&gt;\n  group_by(irrigation_type, time) |&gt;\n  summarise(sev = mean(sev), .groups = \"drop\") |&gt;\n  group_by(irrigation_type) |&gt;\n  summarise(audpc = AUDPC(time = time, y = sev, y_proportion = TRUE)) |&gt;\n  arrange(desc(audpc))\n\n# A tibble: 4 × 2\n  irrigation_type audpc\n  &lt;fct&gt;           &lt;dbl&gt;\n1 Drip            13.4 \n2 MS               8.68\n3 MS above canopy  4.09\n4 Overhead         3.71"
+  },
+  {
+    "objectID": "session2.html#what-to-take-away",
+    "href": "session2.html#what-to-take-away",
+    "title": "2. How epidemics grow",
+    "section": "What to take away",
+    "text": "What to take away\n\nAn epidemic grows like sources times targets, which produces the S-shaped curve.\nCheck every formula at \\(t = 0\\). It takes ten seconds and catches real errors.\nSummarise a whole epidemic with one number, the AUDPC, so you can compare treatments.\n\nThe ideas in this session follow the open textbook R for Plant Disease Epidemiology by Emerson Del Ponte, which is the best next step if you want to go further."
+  },
+  {
+    "objectID": "session3.html",
+    "href": "session3.html",
+    "title": "3. Checking your own results",
+    "section": "",
+    "text": "This session is about the habit that matters most in science: checking a result before you believe it. We use two real examples, and the first one is the instructor’s own mistake."
+  },
+  {
+    "objectID": "session3.html#part-1-do-the-varieties-really-differ",
+    "href": "session3.html#part-1-do-the-varieties-really-differ",
+    "title": "3. Checking your own results",
+    "section": "Part 1: Do the varieties really differ?",
+    "text": "Part 1: Do the varieties really differ?\nFor a final-year thesis at Bells University of Technology, twenty traditional varieties of common bean from Kano were grown in a screen house. Each variety was grown in two pots, with plants measured at two readings. The thesis reported that the varieties differed in how tall they grew.\nHere is the week-6 plant height data:\n\nlibrary(readr)\nlibrary(dplyr)\nlibrary(ggplot2)\n\nbeans &lt;- read_csv(\"data/bean_week6.csv\", show_col_types = FALSE)\nnrow(beans)\n\n[1] 80\n\n\n\nggplot(beans, aes(x = reorder(accession, PH, median), y = PH)) +\n  geom_boxplot(fill = \"#e8e0c8\") +\n  coord_flip() +\n  labs(x = NULL, y = \"Plant height at week 6 (cm)\",\n       title = \"Plant height of 20 bean varieties\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\nThe boxes overlap a lot. Plants of the same variety differ from one another by about as much as the varieties differ from each other. If that is true, “variety A is taller than variety B” is not a safe claim.\n\nPutting a number on it\nHere is a simple check anyone can do. Compare two spreads:\n\nhow much plants of the same variety differ from each other, and\nhow much the averages of the different varieties differ.\n\n\nby_variety &lt;- beans |&gt;\n  group_by(accession) |&gt;\n  summarise(average = mean(PH, na.rm = TRUE), spread = sd(PH, na.rm = TRUE))\n\ntibble(\n  within_a_variety         = mean(by_variety$spread, na.rm = TRUE),\n  between_variety_averages = sd(by_variety$average, na.rm = TRUE)\n)\n\n# A tibble: 1 × 2\n  within_a_variety between_variety_averages\n             &lt;dbl&gt;                    &lt;dbl&gt;\n1             110.                     55.2\n\n\n(na.rm = TRUE tells R to skip the few plants with a missing measurement, instead of giving up.)\nPlants of the same variety differ by about twice as much as the variety averages do. When the differences within groups are bigger than the differences between them, you cannot honestly say one variety is taller than another.\n\n\n\n\n\n\nNoteGoing further: a mixed model (optional)\n\n\n\n\n\nA mixed model splits the variation into its sources: the variety, the pot a plant grew in, and plant-to-plant differences. It gives the same answer more formally: only about 8% of the variation in height comes from the variety.\n\nlibrary(lme4)\nmodel &lt;- lmer(PH ~ factor(reading) + (1 | accession) + (1 | accession:pot), data = beans)\nvc &lt;- as.data.frame(VarCorr(model))\nvc |&gt; transmute(source = grp, share_of_total = vcov / sum(vcov))\n\n         source share_of_total\n1 accession:pot      0.0000000\n2     accession      0.0804882\n3      Residual      0.9195118\n\n\n\n\n\n\n\n\n\n\n\nImportantThe honest response\n\n\n\nThe thesis claims about height differences between varieties had to be withdrawn. That is not a failure: finding it, correcting it and publishing the correction is exactly how science is supposed to work. The full reanalysis is open on GitHub."
+  },
+  {
+    "objectID": "session3.html#part-2-what-a-survey-cannot-see",
+    "href": "session3.html#part-2-what-a-survey-cannot-see",
+    "title": "3. Checking your own results",
+    "section": "Part 2: What a survey cannot see",
+    "text": "Part 2: What a survey cannot see\nIn Session 1 we counted diseased plants by their symptoms. But the WAVE researchers also took leaf samples back to the laboratory and tested them for the virus itself. That lets us ask: how many infected plants did the eye miss?\n\nlibrary(readxl)\n\nlab &lt;- read_excel(\"data/cassava_mosaic_survey.xlsx\", sheet = \"Lab\") |&gt;\n  filter(Host == \"Cassava\", !is.na(Symptom)) |&gt;\n  mutate(showed_symptoms = Symptom == 1,\n         virus_found     = Result != \"Negative\")\n\nlab |&gt; count(showed_symptoms, virus_found)\n\n# A tibble: 4 × 3\n  showed_symptoms virus_found     n\n  &lt;lgl&gt;           &lt;lgl&gt;       &lt;int&gt;\n1 FALSE           FALSE         372\n2 FALSE           TRUE          228\n3 TRUE            FALSE          66\n4 TRUE            TRUE          651\n\n\nNow the key number: of the plants that really were infected, what share showed no symptoms at all?\n\nlab |&gt;\n  filter(virus_found) |&gt;\n  summarise(infected = n(),\n            no_symptoms = sum(!showed_symptoms),\n            share_hidden = mean(!showed_symptoms))\n\n# A tibble: 1 × 3\n  infected no_symptoms share_hidden\n     &lt;int&gt;       &lt;int&gt;        &lt;dbl&gt;\n1      879         228        0.259\n\n\nAbout a quarter of infected plants looked healthy. A survey that relies on the eye will undercount the disease, and those hidden plants keep spreading it.\n\n\n\n\n\n\nWarningCheck how the sample was chosen\n\n\n\nThe plants sent to the laboratory were not picked at random: plants with symptoms were collected more often. That means the true share of hidden infections is probably higher than this. Always ask how a sample was chosen before you trust a percentage."
+  },
+  {
+    "objectID": "session3.html#five-habits-that-catch-mistakes",
+    "href": "session3.html#five-habits-that-catch-mistakes",
+    "title": "3. Checking your own results",
+    "section": "Five habits that catch mistakes",
+    "text": "Five habits that catch mistakes\n\nKeep the raw data untouched. Do every step in a script, so you can rerun it from the start.\nTest with numbers you already know, like checking a formula at \\(t = 0\\).\nLook before you average. A box plot shows overlap that a table of means hides.\nAsk how the sample was chosen. It decides what a percentage can mean.\nShare your data and code, so others can check you. GitHub is free."
+  },
+  {
+    "objectID": "session3.html#your-turn",
+    "href": "session3.html#your-turn",
+    "title": "3. Checking your own results",
+    "section": "Your turn",
+    "text": "Your turn\n\n\n\n\n\n\nNoteExercise\n\n\n\nDo the same check for number of leaves (NL). Are the varieties any easier to tell apart?\n\n\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\n\nby_variety_nl &lt;- beans |&gt;\n  group_by(accession) |&gt;\n  summarise(average = mean(NL, na.rm = TRUE), spread = sd(NL, na.rm = TRUE))\n\ntibble(\n  within_a_variety         = mean(by_variety_nl$spread, na.rm = TRUE),\n  between_variety_averages = sd(by_variety_nl$average, na.rm = TRUE)\n)\n\n# A tibble: 1 × 2\n  within_a_variety between_variety_averages\n             &lt;dbl&gt;                    &lt;dbl&gt;\n1             39.7                     30.8\n\n\nThe spread within a variety is still bigger, so the same caution applies."
+  },
+  {
+    "objectID": "session3.html#what-to-take-away",
+    "href": "session3.html#what-to-take-away",
+    "title": "3. Checking your own results",
+    "section": "What to take away",
+    "text": "What to take away\n\nA difference between groups only means something if it is bigger than the variation within them.\nWhat you can see is not always all there is: test, do not just look.\nChecking and correcting your own work is a strength, and sharing it openly makes everyone’s science better."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Analysing Crop Disease Data in R",
+    "section": "",
+    "text": "Every season, Nigerian farmers lose crops to disease that was only noticed once it was too late to stop. Seeing an outbreak early starts with being able to read disease data properly, and that is a skill most of us were never taught.\nThis workshop teaches it in three short sessions, using real Nigerian data: a survey of cassava mosaic disease across 512 fields in 13 states, and a bean trial grown at Bells University of Technology."
+  },
+  {
+    "objectID": "index.html#who-it-is-for",
+    "href": "index.html#who-it-is-for",
+    "title": "Analysing Crop Disease Data in R",
+    "section": "Who it is for",
+    "text": "Who it is for\nFinal-year and postgraduate students in plant science, agriculture, biotechnology and related fields. No programming experience is needed. If you can use a spreadsheet, you can follow along."
+  },
+  {
+    "objectID": "index.html#what-you-will-learn",
+    "href": "index.html#what-you-will-learn",
+    "title": "Analysing Crop Disease Data in R",
+    "section": "What you will learn",
+    "text": "What you will learn\n\n\n\nSession\nTopic\nYou will be able to\n\n\n\n\n1\nReading disease data\nload a real field survey, measure how much disease there is, and find where it came from\n\n\n2\nHow epidemics grow\ndescribe and fit the S-shaped curve of an epidemic, and check a model with one simple test\n\n\n3\nChecking your own results\ntest whether a result is real before you report it, and share your work so others can check it"
+  },
+  {
+    "objectID": "index.html#format",
+    "href": "index.html#format",
+    "title": "Analysing Crop Disease Data in R",
+    "section": "Format",
+    "text": "Format\n\nThree online sessions of about 90 minutes each. Dates are to be announced.\nFree. You can run everything in your web browser, so you do not need a powerful laptop. See Get set up.\nEvery session is recorded, and all the materials stay on this site, so you can catch up later or work through it on your own."
+  },
+  {
+    "objectID": "index.html#sign-up",
+    "href": "index.html#sign-up",
+    "title": "Analysing Crop Disease Data in R",
+    "section": "Sign up",
+    "text": "Sign up\nRegistration opens soon. The link will appear here."
+  },
+  {
+    "objectID": "index.html#run-by",
+    "href": "index.html#run-by",
+    "title": "Analysing Crop Disease Data in R",
+    "section": "Run by",
+    "text": "Run by\nRaphael Odera Onunkwor, a biotechnology graduate of Bells University of Technology (First Class Honours, 2025) and a software engineer. He has rebuilt published crop-disease analyses in open code, and his correction to an open plant-disease epidemiology textbook is credited in its second edition.\nThe data used here come from other researchers who made them openly available. See Data and credits."
+  },
+  {
+    "objectID": "credits.html",
+    "href": "credits.html",
+    "title": "Data and credits",
+    "section": "",
+    "text": "cassava_mosaic_survey.xlsx: cassava mosaic disease survey, Nigeria, 2015 and 2017\nbean_week6.csv: week-6 measurements from a common bean trial, Bells University of Technology"
+  },
+  {
+    "objectID": "credits.html#download-the-data",
+    "href": "credits.html#download-the-data",
+    "title": "Data and credits",
+    "section": "",
+    "text": "cassava_mosaic_survey.xlsx: cassava mosaic disease survey, Nigeria, 2015 and 2017\nbean_week6.csv: week-6 measurements from a common bean trial, Bells University of Technology"
+  },
+  {
+    "objectID": "credits.html#cassava-mosaic-disease-survey",
+    "href": "credits.html#cassava-mosaic-disease-survey",
+    "title": "Data and credits",
+    "section": "Cassava mosaic disease survey",
+    "text": "Cassava mosaic disease survey\nEni, A., Efekemo, O., Onile-ere, O. and Pita, J. (2021). Survey of cassava mosaic begomoviruses across South-west and North central regions of Nigeria in 2015 and 2017. Mendeley Data, V1. doi:10.17632/mpj2nxk3tk.1\nThe accompanying paper is Eni et al. (2021), Annals of Applied Biology, doi:10.1111/aab.12647.\nThe data are shared under a Creative Commons Attribution 4.0 licence and are used here unmodified. Thank you to the WAVE team at Covenant University for making them openly available."
+  },
+  {
+    "objectID": "credits.html#common-bean-trial",
+    "href": "credits.html#common-bean-trial",
+    "title": "Data and credits",
+    "section": "Common bean trial",
+    "text": "Common bean trial\nFrom Raphael Odera Onunkwor’s final-year thesis at Bells University of Technology. The full reanalysis, raw data and code are at github.com/Onunkwor/pvfta1-phenology (MIT licence)."
+  },
+  {
+    "objectID": "credits.html#software-and-further-reading",
+    "href": "credits.html#software-and-further-reading",
+    "title": "Data and credits",
+    "section": "Software and further reading",
+    "text": "Software and further reading\n\nR for Plant Disease Epidemiology by Emerson M. Del Ponte: an open textbook, and the best next step after this workshop.\nepifitter by Kaique Alves and Emerson Del Ponte, for fitting disease progress curves. Session 2 uses its powdery mildew data.\nR, RStudio, and the readxl, dplyr, ggplot2 and lme4 packages."
+  },
+  {
+    "objectID": "credits.html#licence-for-these-materials",
+    "href": "credits.html#licence-for-these-materials",
+    "title": "Data and credits",
+    "section": "Licence for these materials",
+    "text": "Licence for these materials\nThe text of this site is shared under CC BY 4.0, and the code under the MIT licence. You are free to reuse them in your own teaching; please credit the source."
+  }
+]
