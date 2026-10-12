@@ -1,0 +1,173 @@
+---
+title: "1. Reading disease data"
+subtitle: "How much disease is there, and where did it come from?"
+---
+
+## The question
+
+Cassava mosaic disease is caused by viruses that turn cassava leaves into a yellow-green patchwork and stunt the plant. It reaches a field in two ways:
+
+- **in the planting material**, when farmers plant stem cuttings taken from infected plants, or
+- **by whiteflies**, which carry the virus from plant to plant as they feed.
+
+In 2015 and 2017, researchers from the Central and West African Virus Epidemiology (WAVE) programme's hub at Covenant University walked 512 cassava fields across 13 states in South-West and North-Central Nigeria and recorded what they saw. Their data are free for anyone to use. Today we use them to answer two questions: **how much disease was there**, and **where did it come from?**
+
+## First steps in R (15 minutes)
+
+If you have never used R, start here. Type each line into the console and press Enter.
+
+**R is a calculator:**
+
+```{r}
+2 + 3
+```
+
+**You can store a result under a name** with `<-`, and use the name later:
+
+```{r}
+plants <- 100
+diseased <- 40
+diseased / plants
+```
+
+**A function does a job.** You give it something in brackets, and it gives an answer back:
+
+```{r}
+heights <- c(12, 15, 9, 20)   # c() combines numbers into a list
+mean(heights)
+max(heights)
+```
+
+**A table of data is called a data frame.** Each row is one thing (here, one field) and each column is one measurement. You will meet one in a moment.
+
+**Packages add extra tools.** You install them once (see [Get set up](setup.qmd)), and switch them on each session with `library()`.
+
+That is all you need for today.
+
+## Load the data
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+field <- read_excel("data/cassava_mosaic_survey.xlsx", sheet = "Field")
+nrow(field)
+names(field)
+```
+
+Each row is one field. The columns we need:
+
+| Column | What it means |
+|---|---|
+| `Year` | 2015 or 2017 |
+| `State` | the state the field is in |
+| `CMD_Incidence` | the **share of plants** in the field showing symptoms, from 0 to 1 |
+| `Mean_CMD_Severity` | **how bad** the symptoms were, on a 1 to 5 scale, averaged over the diseased plants |
+| `Cutting_Infection` | the share of the infection that came in with the **planting material** |
+| `Whitefly_Infection` | the share that was carried in by **whiteflies** |
+| `Total_whitefly` | how many whiteflies were counted in the field |
+
+## Incidence and severity are different things
+
+These two words get mixed up all the time, so it is worth being precise:
+
+- **Incidence** asks *how many* plants are diseased. A field with 40 sick plants out of 100 has an incidence of 0.4.
+- **Severity** asks *how badly* a plant is affected. A plant can be diseased but only mildly.
+
+A field can have high incidence and low severity (many plants, mild symptoms), or the reverse. You need both to describe an outbreak.
+
+Cassava mosaic severity is scored on a **1 to 5 scale**, from 1 (no symptoms) to 5 (severe mosaic, distorted leaves and a stunted plant). The numbers are **ordered categories**, not measurements: a score of 4 is worse than a 2, but it is not "twice as bad". Keep that in mind whenever you average scores like these.
+
+## How much disease was there?
+
+```{r}
+field |>
+  group_by(Year) |>
+  summarise(
+    fields         = n(),
+    mean_incidence = mean(CMD_Incidence),
+    mean_severity  = mean(Mean_CMD_Severity, na.rm = TRUE)
+  )
+```
+
+In 2015, on average 44% of plants in a field showed symptoms. By 2017 that had fallen to about 12%.
+
+A picture shows the spread across fields, not just the average:
+
+```{r}
+ggplot(field, aes(x = factor(Year), y = CMD_Incidence)) +
+  geom_boxplot(fill = "#d8e9d0") +
+  labs(x = "Survey year", y = "Share of plants with symptoms",
+       title = "Cassava mosaic incidence in 512 Nigerian fields") +
+  theme_minimal()
+```
+
+## Where did the infection come from?
+
+The route of infection is only recorded for fields that had some disease, so we keep just those:
+
+```{r}
+diseased <- field |> filter(CMD_Incidence > 0)
+nrow(diseased)
+
+summary(diseased$Cutting_Infection)
+```
+
+The median field got **about 91%** of its infection from the planting material. Let us count how many fields got at least half of it that way, and how many got more than half:
+
+```{r}
+diseased |>
+  summarise(
+    fields              = n(),
+    at_least_half       = mean(Cutting_Infection >= 0.5),
+    more_than_half      = mean(Cutting_Infection > 0.5)
+  )
+```
+
+In nine out of ten diseased fields, at least half of the disease was **planted**, not caught, and in 85% it was more than half. Notice how much the wording matters: "at least half" and "more than half" give different numbers, because 18 fields sit at exactly 50%. That changes what a farmer should do: the first defence is clean planting material, not spraying for whiteflies.
+
+## Your turn
+
+::: {.callout-note}
+## Exercise 1
+Which state had the highest average incidence in 2017?
+:::
+
+::: {.callout-tip collapse="true"}
+## Answer
+```{r}
+field |>
+  filter(Year == 2017) |>
+  group_by(State) |>
+  summarise(mean_incidence = mean(CMD_Incidence), fields = n()) |>
+  arrange(desc(mean_incidence))
+```
+Check the `fields` column too: an average from three fields is much less reliable than one from fifty.
+:::
+
+::: {.callout-note}
+## Exercise 2
+Do fields with more whiteflies get more of their infection from whiteflies? Make a plot of `Total_whitefly` against `Whitefly_Infection` for the diseased fields.
+:::
+
+::: {.callout-tip collapse="true"}
+## Answer
+```{r}
+ggplot(diseased, aes(x = Total_whitefly + 1, y = Whitefly_Infection)) +
+  geom_point(alpha = 0.4) +
+  scale_x_log10() +
+  labs(x = "Whiteflies counted (+1, log scale)",
+       y = "Share of infection from whiteflies") +
+  theme_minimal()
+
+cor(diseased$Total_whitefly, diseased$Whitefly_Infection, method = "spearman")
+```
+There is a link, but a loose one. The whitefly count is one visit on one day, while the symptoms record the whole season. A single count is a snapshot of something that keeps changing.
+:::
+
+## What to take away
+
+- Always ask **how many** (incidence) and **how badly** (severity) separately.
+- Treat 1 to 5 scores as ordered categories, not measurements.
+- A survey can tell you not only how much disease there is, but **where it came from**, and that decides what farmers should do about it.

@@ -1,0 +1,42 @@
+---
+title: "Get set up"
+---
+
+You need two things: **R**, which does the calculations, and a place to type and run it. Choose one of the two options below.
+
+## Option A: in your browser (recommended)
+
+Nothing to install, and it works on any laptop with a web browser.
+
+1. Go to [posit.cloud](https://posit.cloud) and create a free account.
+2. Click **New Project**, then **New RStudio Project**.
+3. In the panel called **Console**, paste this line and press Enter. It installs the packages the workshop uses, and takes a few minutes the first time:
+
+```r
+install.packages(c("readxl", "dplyr", "tidyr", "ggplot2", "epifitter", "lme4"))
+```
+
+4. Download the two data files from [Data and credits](credits.qmd) and upload them using the **Upload** button in the **Files** panel. Put them in a folder called `data`.
+
+## Option B: on your own computer
+
+1. Install R from [cran.r-project.org](https://cran.r-project.org).
+2. Install RStudio Desktop (free) from [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/).
+3. Open RStudio and run the same `install.packages(...)` line as in Option A.
+4. Make a folder for the workshop with a `data` folder inside it, and save the two data files there.
+
+## Check that it works
+
+Paste this into the console. If it prints the number of fields in the survey, you are ready.
+
+```r
+library(readxl)
+field <- read_excel("data/cassava_mosaic_survey.xlsx", sheet = "Field")
+nrow(field)
+```
+
+It should print `512`.
+
+## If you get stuck
+
+Do not worry if something does not install the first time; it happens to everyone. Bring the error message to the first session, and we will fix it together in the first ten minutes.

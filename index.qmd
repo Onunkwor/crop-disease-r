@@ -1,0 +1,36 @@
+---
+title: "Analysing Crop Disease Data in R"
+subtitle: "A free online workshop for Nigerian plant-science students"
+---
+
+Every season, Nigerian farmers lose crops to disease that was only noticed once it was too late to stop. Seeing an outbreak early starts with being able to read disease data properly, and that is a skill most of us were never taught.
+
+This workshop teaches it in three short sessions, using **real Nigerian data**: a survey of cassava mosaic disease across 512 fields in 13 states, and a bean trial grown at Bells University of Technology.
+
+## Who it is for
+
+Final-year and postgraduate students in plant science, agriculture, biotechnology and related fields. **No programming experience is needed.** If you can use a spreadsheet, you can follow along.
+
+## What you will learn
+
+| Session | Topic | You will be able to |
+|---|---|---|
+| 1 | [Reading disease data](session1.qmd) | load a real field survey, measure how much disease there is, and find where it came from |
+| 2 | [How epidemics grow](session2.qmd) | describe and fit the S-shaped curve of an epidemic, and check a model with one simple test |
+| 3 | [Checking your own results](session3.qmd) | test whether a result is real before you report it, and share your work so others can check it |
+
+## Format
+
+- **Three online sessions** of about 90 minutes each. Dates are to be announced.
+- **Free.** You can run everything in your web browser, so you do not need a powerful laptop. See [Get set up](setup.qmd).
+- **Every session is recorded**, and all the materials stay on this site, so you can catch up later or work through it on your own.
+
+## Sign up
+
+Registration opens soon. The link will appear here.
+
+## Run by
+
+Raphael Odera Onunkwor, a biotechnology graduate of Bells University of Technology (First Class Honours, 2025) and a software engineer. He has rebuilt published crop-disease analyses in open code, and his correction to an open plant-disease epidemiology textbook is credited in its second edition.
+
+The data used here come from other researchers who made them openly available. See [Data and credits](credits.qmd).

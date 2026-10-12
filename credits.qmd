@@ -1,0 +1,30 @@
+---
+title: "Data and credits"
+---
+
+## Download the data
+
+- [cassava_mosaic_survey.xlsx](data/cassava_mosaic_survey.xlsx): cassava mosaic disease survey, Nigeria, 2015 and 2017
+- [bean_week6.csv](data/bean_week6.csv): week-6 measurements from a common bean trial, Bells University of Technology
+
+## Cassava mosaic disease survey
+
+Eni, A., Efekemo, O., Onile-ere, O. and Pita, J. (2021). *Survey of cassava mosaic begomoviruses across South-west and North central regions of Nigeria in 2015 and 2017.* Mendeley Data, V1. [doi:10.17632/mpj2nxk3tk.1](https://doi.org/10.17632/mpj2nxk3tk.1)
+
+The accompanying paper is Eni et al. (2021), *Annals of Applied Biology*, [doi:10.1111/aab.12647](https://doi.org/10.1111/aab.12647).
+
+The data are shared under a [Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/) licence and are used here unmodified. Thank you to the WAVE team at Covenant University for making them openly available.
+
+## Common bean trial
+
+From Raphael Odera Onunkwor's final-year thesis at Bells University of Technology. The full reanalysis, raw data and code are at [github.com/Onunkwor/pvfta1-phenology](https://github.com/Onunkwor/pvfta1-phenology) (MIT licence).
+
+## Software and further reading
+
+- [R for Plant Disease Epidemiology](https://r4pde.net) by Emerson M. Del Ponte: an open textbook, and the best next step after this workshop.
+- [epifitter](https://cran.r-project.org/package=epifitter) by Kaique Alves and Emerson Del Ponte, for fitting disease progress curves. Session 2 uses its powdery mildew data.
+- R, RStudio, and the `readxl`, `dplyr`, `ggplot2` and `lme4` packages.
+
+## Licence for these materials
+
+The text of this site is shared under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), and the code under the MIT licence. You are free to reuse them in your own teaching; please credit the source.

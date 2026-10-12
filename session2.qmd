@@ -1,0 +1,137 @@
+---
+title: "2. How epidemics grow"
+subtitle: "The S-shaped curve, and one test that catches wrong models"
+---
+
+## Why epidemics speed up and then slow down
+
+Picture a field of 100 leaves where one is infected. Spores from that one leaf land on the 99 healthy ones, so new infections appear slowly at first. As more leaves become infected, there are more sources of spores and the epidemic speeds up. But later there are few healthy leaves left to infect, so it slows down again.
+
+So the speed of an epidemic depends on two things multiplied together:
+
+- **how much disease there is** to spread *from* (call it $y$), and
+- **how much healthy tissue is left** to spread *to* ($1 - y$).
+
+| Diseased share $y$ | Healthy share $1-y$ | Sources times targets |
+|---|---|---|
+| 0.01 | 0.99 | 0.0099 (slow) |
+| 0.50 | 0.50 | 0.25 (fastest) |
+| 0.99 | 0.01 | 0.0099 (slow again) |
+
+Slow, then fast, then slow is the S-shaped curve. It is called the **logistic** model, and its formula is:
+
+$$
+y(t) = \frac{1}{1 + \dfrac{1 - y_0}{y_0}\, e^{-r t}}
+$$
+
+where $y_0$ is the share diseased at the start and $r$ is how fast the epidemic grows.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+logistic <- function(t, y0, r) 1 / (1 + ((1 - y0) / y0) * exp(-r * t))
+
+curve_data <- tibble(t = 0:40) |>
+  mutate(slow = logistic(t, 0.01, 0.15),
+         fast = logistic(t, 0.01, 0.30))
+
+ggplot(curve_data, aes(t)) +
+  geom_line(aes(y = slow, colour = "r = 0.15")) +
+  geom_line(aes(y = fast, colour = "r = 0.30")) +
+  labs(x = "Days", y = "Share diseased", colour = NULL,
+       title = "Two logistic epidemics starting from 1% disease") +
+  theme_minimal()
+```
+
+## The one test every model must pass
+
+Here is a simple check that catches a surprising number of mistakes, including errors that get printed in textbooks. **Put $t = 0$ into the formula. The answer must be $y_0$**, the starting level, because that is what $y_0$ means.
+
+Below are two versions of the logistic formula. One is correct. The other was once printed in an open epidemiology textbook, before a reader reported the error and it was corrected:
+
+```{r}
+correct <- function(t, y0, r) 1 / (1 + ((1 - y0) / y0) * exp(-r * t))
+printed <- function(t, y0, r) 1 / (1 + (1 - y0) * exp(-r * t))
+
+correct(t = 0, y0 = 0.01, r = 0.3)
+printed(t = 0, y0 = 0.01, r = 0.3)
+```
+
+The correct version gives 0.01, which is what we started with. The printed one gives 0.50, claiming the field was already half diseased on day zero. Now look at day 15:
+
+```{r}
+correct(t = 15, y0 = 0.01, r = 0.3)
+printed(t = 15, y0 = 0.01, r = 0.3)
+```
+
+The printed formula says the crop is about 99% diseased when the truth is under half. A student who trusted it might give up on a field that could still be saved. **One line of arithmetic, checking $t = 0$, would have caught it.**
+
+## A real epidemic
+
+Now look at real data. The `epifitter` package comes with measurements of powdery mildew on tomato, taken every week:
+
+```{r}
+library(epifitter)
+
+mildew <- PowderyMildew |>
+  filter(irrigation_type == "Drip", moisture == "High moisture") |>
+  group_by(time) |>
+  summarise(sev = mean(sev))
+
+ggplot(mildew, aes(time, sev)) +
+  geom_point(size = 2) +
+  geom_line(alpha = 0.4) +
+  labs(x = "Days", y = "Share of leaf diseased",
+       title = "Powdery mildew on tomato") +
+  theme_minimal()
+```
+
+You can see the epidemic building through the season. Fitting a curve to points like these gives you the growth rate $r$, so you can compare epidemics fairly.
+
+::: {.callout-note collapse="true"}
+## Going further: fitting the curve (optional)
+`fit_nlin()` tries several standard curves and reports how well each fits. In the table, values closer to 1 in the `CCC` and `r_squared` columns mean a better fit.
+
+```{r}
+fits <- fit_nlin(time = mildew$time, y = mildew$sev)
+fits$Stats
+plot_fit(fits) + theme_minimal()
+```
+:::
+
+## One number for a whole epidemic
+
+To compare epidemics, for example under two irrigation methods, it helps to sum up the whole curve in one number. The **area under the disease progress curve** (AUDPC) does that. A bigger area means more disease for longer.
+
+```{r}
+AUDPC(time = mildew$time, y = mildew$sev, y_proportion = TRUE)
+```
+
+## Your turn
+
+::: {.callout-note}
+## Exercise
+Under **high moisture**, the data include four irrigation methods. Which one had the most disease over the whole season?
+:::
+
+::: {.callout-tip collapse="true"}
+## Answer
+```{r}
+PowderyMildew |>
+  filter(moisture == "High moisture") |>
+  group_by(irrigation_type, time) |>
+  summarise(sev = mean(sev), .groups = "drop") |>
+  group_by(irrigation_type) |>
+  summarise(audpc = AUDPC(time = time, y = sev, y_proportion = TRUE)) |>
+  arrange(desc(audpc))
+```
+:::
+
+## What to take away
+
+- An epidemic grows like **sources times targets**, which produces the S-shaped curve.
+- **Check every formula at $t = 0$.** It takes ten seconds and catches real errors.
+- Summarise a whole epidemic with one number, the AUDPC, so you can compare treatments.
+
+The ideas in this session follow the open textbook [*R for Plant Disease Epidemiology*](https://r4pde.net) by Emerson Del Ponte, which is the best next step if you want to go further.

@@ -1,0 +1,140 @@
+---
+title: "3. Checking your own results"
+subtitle: "Is the difference real, and what did the survey miss?"
+---
+
+This session is about the habit that matters most in science: **checking a result before you believe it**. We use two real examples, and the first one is the instructor's own mistake.
+
+## Part 1: Do the varieties really differ?
+
+For a final-year thesis at Bells University of Technology, twenty traditional varieties of common bean from Kano were grown in a screen house. Each variety was grown in **two pots**, with plants measured at **two readings**. The thesis reported that the varieties differed in how tall they grew.
+
+Here is the week-6 plant height data:
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+beans <- read_csv("data/bean_week6.csv", show_col_types = FALSE)
+nrow(beans)
+```
+
+```{r}
+#| fig-height: 5
+ggplot(beans, aes(x = reorder(accession, PH, median), y = PH)) +
+  geom_boxplot(fill = "#e8e0c8") +
+  coord_flip() +
+  labs(x = NULL, y = "Plant height at week 6 (cm)",
+       title = "Plant height of 20 bean varieties") +
+  theme_minimal()
+```
+
+The boxes overlap a lot. Plants of the **same variety** differ from one another by about as much as the varieties differ from each other. If that is true, "variety A is taller than variety B" is not a safe claim.
+
+### Putting a number on it
+
+Here is a simple check anyone can do. Compare two spreads:
+
+- how much plants of the **same** variety differ from each other, and
+- how much the **averages** of the different varieties differ.
+
+```{r}
+by_variety <- beans |>
+  group_by(accession) |>
+  summarise(average = mean(PH, na.rm = TRUE), spread = sd(PH, na.rm = TRUE))
+
+tibble(
+  within_a_variety         = mean(by_variety$spread, na.rm = TRUE),
+  between_variety_averages = sd(by_variety$average, na.rm = TRUE)
+)
+```
+
+(`na.rm = TRUE` tells R to skip the few plants with a missing measurement, instead of giving up.)
+
+Plants of the same variety differ by about **twice** as much as the variety averages do. When the differences *within* groups are bigger than the differences *between* them, you cannot honestly say one variety is taller than another.
+
+::: {.callout-note collapse="true"}
+## Going further: a mixed model (optional)
+A **mixed model** splits the variation into its sources: the variety, the pot a plant grew in, and plant-to-plant differences. It gives the same answer more formally: only about 8% of the variation in height comes from the variety.
+
+```{r}
+library(lme4)
+model <- lmer(PH ~ factor(reading) + (1 | accession) + (1 | accession:pot), data = beans)
+vc <- as.data.frame(VarCorr(model))
+vc |> transmute(source = grp, share_of_total = vcov / sum(vcov))
+```
+:::
+
+::: {.callout-important}
+## The honest response
+The thesis claims about height differences between varieties had to be withdrawn. That is not a failure: finding it, correcting it and publishing the correction is exactly how science is supposed to work. The full reanalysis is [open on GitHub](https://github.com/Onunkwor/pvfta1-phenology).
+:::
+
+## Part 2: What a survey cannot see
+
+In Session 1 we counted diseased plants by their **symptoms**. But the WAVE researchers also took leaf samples back to the laboratory and **tested them for the virus itself**. That lets us ask: how many infected plants did the eye miss?
+
+```{r}
+library(readxl)
+
+lab <- read_excel("data/cassava_mosaic_survey.xlsx", sheet = "Lab") |>
+  filter(Host == "Cassava", !is.na(Symptom)) |>
+  mutate(showed_symptoms = Symptom == 1,
+         virus_found     = Result != "Negative")
+
+lab |> count(showed_symptoms, virus_found)
+```
+
+Now the key number: of the plants that **really were infected**, what share showed no symptoms at all?
+
+```{r}
+lab |>
+  filter(virus_found) |>
+  summarise(infected = n(),
+            no_symptoms = sum(!showed_symptoms),
+            share_hidden = mean(!showed_symptoms))
+```
+
+About **a quarter of infected plants looked healthy**. A survey that relies on the eye will undercount the disease, and those hidden plants keep spreading it.
+
+::: {.callout-warning}
+## Check how the sample was chosen
+The plants sent to the laboratory were not picked at random: plants with symptoms were collected more often. That means the true share of hidden infections is probably **higher** than this. Always ask how a sample was chosen before you trust a percentage.
+:::
+
+## Five habits that catch mistakes
+
+1. **Keep the raw data untouched.** Do every step in a script, so you can rerun it from the start.
+2. **Test with numbers you already know**, like checking a formula at $t = 0$.
+3. **Look before you average.** A box plot shows overlap that a table of means hides.
+4. **Ask how the sample was chosen.** It decides what a percentage can mean.
+5. **Share your data and code**, so others can check you. GitHub is free.
+
+## Your turn
+
+::: {.callout-note}
+## Exercise
+Do the same check for **number of leaves** (`NL`). Are the varieties any easier to tell apart?
+:::
+
+::: {.callout-tip collapse="true"}
+## Answer
+```{r}
+by_variety_nl <- beans |>
+  group_by(accession) |>
+  summarise(average = mean(NL, na.rm = TRUE), spread = sd(NL, na.rm = TRUE))
+
+tibble(
+  within_a_variety         = mean(by_variety_nl$spread, na.rm = TRUE),
+  between_variety_averages = sd(by_variety_nl$average, na.rm = TRUE)
+)
+```
+The spread within a variety is still bigger, so the same caution applies.
+:::
+
+## What to take away
+
+- A difference between groups only means something if it is **bigger than the variation within** them.
+- What you can **see** is not always all there **is**: test, do not just look.
+- Checking and correcting your own work is a strength, and sharing it openly makes everyone's science better.

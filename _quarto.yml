@@ -1,0 +1,46 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Analysing Crop Disease Data in R"
+  site-url: "https://onunkwor.github.io/crop-disease-r/"
+  repo-url: "https://github.com/Onunkwor/crop-disease-r"
+  repo-actions: [issue]
+  description: "A free three-session workshop for Nigerian plant-science students, built on real Nigerian crop data."
+  page-navigation: true
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: setup.qmd
+        text: Get set up
+      - href: session1.qmd
+        text: "1. Reading disease data"
+      - href: session2.qmd
+        text: "2. How epidemics grow"
+      - href: session3.qmd
+        text: "3. Checking your own results"
+      - href: credits.qmd
+        text: Data and credits
+    right:
+      - icon: github
+        href: https://github.com/Onunkwor/crop-disease-r
+        aria-label: GitHub
+  page-footer:
+    center: "Free to use and share. Text CC BY 4.0, code MIT."
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-overflow: wrap
+    fig-width: 7
+    fig-height: 4
+
+execute:
+  freeze: auto
+  warning: false
+  message: false
