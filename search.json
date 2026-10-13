@@ -32,7 +32,7 @@
     "href": "setup.html#if-you-get-stuck",
     "title": "Get set up",
     "section": "If you get stuck",
-    "text": "If you get stuck\nDo not worry if something does not install the first time; it happens to everyone. Bring the error message to the first session, and we will fix it together in the first ten minutes."
+    "text": "If you get stuck\nDo not worry if something does not install the first time; it happens to everyone. Copy the exact error message into a search engine, which solves most problems. If you are still stuck, open an issue on GitHub and paste the message there."
   },
   {
     "objectID": "session1.html",
@@ -53,7 +53,7 @@
     "href": "session1.html#first-steps-in-r-15-minutes",
     "title": "1. Reading disease data",
     "section": "First steps in R (15 minutes)",
-    "text": "First steps in R (15 minutes)\nIf you have never used R, start here. Type each line into the console and press Enter.\nR is a calculator:\n\n2 + 3\n\n[1] 5\n\n\nYou can store a result under a name with &lt;-, and use the name later:\n\nplants &lt;- 100\ndiseased &lt;- 40\ndiseased / plants\n\n[1] 0.4\n\n\nA function does a job. You give it something in brackets, and it gives an answer back:\n\nheights &lt;- c(12, 15, 9, 20)   # c() combines numbers into a list\nmean(heights)\n\n[1] 14\n\nmax(heights)\n\n[1] 20\n\n\nA table of data is called a data frame. Each row is one thing (here, one field) and each column is one measurement. You will meet one in a moment.\nPackages add extra tools. You install them once (see Get set up), and switch them on each session with library().\nThat is all you need for today."
+    "text": "First steps in R (15 minutes)\nIf you have never used R, start here. Type each line into the console and press Enter.\nR is a calculator:\n\n2 + 3\n\n[1] 5\n\n\nYou can store a result under a name with &lt;-, and use the name later:\n\nplants &lt;- 100\ndiseased &lt;- 40\ndiseased / plants\n\n[1] 0.4\n\n\nA function does a job. You give it something in brackets, and it gives an answer back:\n\nheights &lt;- c(12, 15, 9, 20)   # c() combines numbers into a list\nmean(heights)\n\n[1] 14\n\nmax(heights)\n\n[1] 20\n\n\nA table of data is called a data frame. Each row is one thing (here, one field) and each column is one measurement. You will meet one in a moment.\nPackages add extra tools. You install them once (see Get set up), and switch them on each time you start R with library().\nThat is all you need for today."
   },
   {
     "objectID": "session1.html#load-the-data",
@@ -144,14 +144,14 @@
     "href": "session2.html#what-to-take-away",
     "title": "2. How epidemics grow",
     "section": "What to take away",
-    "text": "What to take away\n\nAn epidemic grows like sources times targets, which produces the S-shaped curve.\nCheck every formula at \\(t = 0\\). It takes ten seconds and catches real errors.\nSummarise a whole epidemic with one number, the AUDPC, so you can compare treatments.\n\nThe ideas in this session follow the open textbook R for Plant Disease Epidemiology by Emerson Del Ponte, which is the best next step if you want to go further."
+    "text": "What to take away\n\nAn epidemic grows like sources times targets, which produces the S-shaped curve.\nCheck every formula at \\(t = 0\\). It takes ten seconds and catches real errors.\nSummarise a whole epidemic with one number, the AUDPC, so you can compare treatments.\n\nThe ideas in this lesson follow the open textbook R for Plant Disease Epidemiology by Emerson Del Ponte, which is the best next step if you want to go further."
   },
   {
     "objectID": "session3.html",
     "href": "session3.html",
     "title": "3. Checking your own results",
     "section": "",
-    "text": "This session is about the habit that matters most in science: checking a result before you believe it. We use two real examples, and the first one is the instructor’s own mistake."
+    "text": "This lesson is about the habit that matters most in science: checking a result before you believe it. We use two real examples, and the first one is the instructor’s own mistake."
   },
   {
     "objectID": "session3.html#part-1-do-the-varieties-really-differ",
@@ -165,7 +165,7 @@
     "href": "session3.html#part-2-what-a-survey-cannot-see",
     "title": "3. Checking your own results",
     "section": "Part 2: What a survey cannot see",
-    "text": "Part 2: What a survey cannot see\nIn Session 1 we counted diseased plants by their symptoms. But the WAVE researchers also took leaf samples back to the laboratory and tested them for the virus itself. That lets us ask: how many infected plants did the eye miss?\n\nlibrary(readxl)\n\nlab &lt;- read_excel(\"data/cassava_mosaic_survey.xlsx\", sheet = \"Lab\") |&gt;\n  filter(Host == \"Cassava\", !is.na(Symptom)) |&gt;\n  mutate(showed_symptoms = Symptom == 1,\n         virus_found     = Result != \"Negative\")\n\nlab |&gt; count(showed_symptoms, virus_found)\n\n# A tibble: 4 × 3\n  showed_symptoms virus_found     n\n  &lt;lgl&gt;           &lt;lgl&gt;       &lt;int&gt;\n1 FALSE           FALSE         372\n2 FALSE           TRUE          228\n3 TRUE            FALSE          66\n4 TRUE            TRUE          651\n\n\nNow the key number: of the plants that really were infected, what share showed no symptoms at all?\n\nlab |&gt;\n  filter(virus_found) |&gt;\n  summarise(infected = n(),\n            no_symptoms = sum(!showed_symptoms),\n            share_hidden = mean(!showed_symptoms))\n\n# A tibble: 1 × 3\n  infected no_symptoms share_hidden\n     &lt;int&gt;       &lt;int&gt;        &lt;dbl&gt;\n1      879         228        0.259\n\n\nAbout a quarter of infected plants looked healthy. A survey that relies on the eye will undercount the disease, and those hidden plants keep spreading it.\n\n\n\n\n\n\nWarningCheck how the sample was chosen\n\n\n\nThe plants sent to the laboratory were not picked at random: plants with symptoms were collected more often. That means the true share of hidden infections is probably higher than this. Always ask how a sample was chosen before you trust a percentage."
+    "text": "Part 2: What a survey cannot see\nIn Lesson 1 we counted diseased plants by their symptoms. But the WAVE researchers also took leaf samples back to the laboratory and tested them for the virus itself. That lets us ask: how many infected plants did the eye miss?\n\nlibrary(readxl)\n\nlab &lt;- read_excel(\"data/cassava_mosaic_survey.xlsx\", sheet = \"Lab\") |&gt;\n  filter(Host == \"Cassava\", !is.na(Symptom)) |&gt;\n  mutate(showed_symptoms = Symptom == 1,\n         virus_found     = Result != \"Negative\")\n\nlab |&gt; count(showed_symptoms, virus_found)\n\n# A tibble: 4 × 3\n  showed_symptoms virus_found     n\n  &lt;lgl&gt;           &lt;lgl&gt;       &lt;int&gt;\n1 FALSE           FALSE         372\n2 FALSE           TRUE          228\n3 TRUE            FALSE          66\n4 TRUE            TRUE          651\n\n\nNow the key number: of the plants that really were infected, what share showed no symptoms at all?\n\nlab |&gt;\n  filter(virus_found) |&gt;\n  summarise(infected = n(),\n            no_symptoms = sum(!showed_symptoms),\n            share_hidden = mean(!showed_symptoms))\n\n# A tibble: 1 × 3\n  infected no_symptoms share_hidden\n     &lt;int&gt;       &lt;int&gt;        &lt;dbl&gt;\n1      879         228        0.259\n\n\nAbout a quarter of infected plants looked healthy. A survey that relies on the eye will undercount the disease, and those hidden plants keep spreading it.\n\n\n\n\n\n\nWarningCheck how the sample was chosen\n\n\n\nThe plants sent to the laboratory were not picked at random: plants with symptoms were collected more often. That means the true share of hidden infections is probably higher than this. Always ask how a sample was chosen before you trust a percentage."
   },
   {
     "objectID": "session3.html#five-habits-that-catch-mistakes",
@@ -193,7 +193,7 @@
     "href": "index.html",
     "title": "Analysing Crop Disease Data in R",
     "section": "",
-    "text": "Every season, Nigerian farmers lose crops to disease that was only noticed once it was too late to stop. Seeing an outbreak early starts with being able to read disease data properly, and that is a skill most of us were never taught.\nThis workshop teaches it in three short sessions, using real Nigerian data: a survey of cassava mosaic disease across 512 fields in 13 states, and a bean trial grown at Bells University of Technology."
+    "text": "Every season, Nigerian farmers lose crops to disease that was only noticed once it was too late to stop. Seeing an outbreak early starts with being able to read disease data properly, and that is a skill most of us were never taught.\nThis course teaches it in three short lessons, using real Nigerian data: a survey of cassava mosaic disease across 512 fields in 13 states, and a bean trial grown at Bells University of Technology."
   },
   {
     "objectID": "index.html#who-it-is-for",
@@ -207,21 +207,21 @@
     "href": "index.html#what-you-will-learn",
     "title": "Analysing Crop Disease Data in R",
     "section": "What you will learn",
-    "text": "What you will learn\n\n\n\nSession\nTopic\nYou will be able to\n\n\n\n\n1\nReading disease data\nload a real field survey, measure how much disease there is, and find where it came from\n\n\n2\nHow epidemics grow\ndescribe and fit the S-shaped curve of an epidemic, and check a model with one simple test\n\n\n3\nChecking your own results\ntest whether a result is real before you report it, and share your work so others can check it"
+    "text": "What you will learn\n\n\n\nLesson\nTopic\nYou will be able to\n\n\n\n\n1\nReading disease data\nload a real field survey, measure how much disease there is, and find where it came from\n\n\n2\nHow epidemics grow\ndescribe and fit the S-shaped curve of an epidemic, and check a model with one simple test\n\n\n3\nChecking your own results\ntest whether a result is real before you report it, and share your work so others can check it"
   },
   {
-    "objectID": "index.html#format",
-    "href": "index.html#format",
+    "objectID": "index.html#how-it-works",
+    "href": "index.html#how-it-works",
     "title": "Analysing Crop Disease Data in R",
-    "section": "Format",
-    "text": "Format\n\nThree online sessions of about 90 minutes each. Dates are to be announced.\nFree. You can run everything in your web browser, so you do not need a powerful laptop. See Get set up.\nEvery session is recorded, and all the materials stay on this site, so you can catch up later or work through it on your own."
+    "section": "How it works",
+    "text": "How it works\n\nSelf-paced. Work through the three lessons in order, whenever suits you. Each takes about 90 minutes.\nFree, with nothing to install. You can run everything in your web browser, so you do not need a powerful laptop. See Get set up.\nLearn by doing. Every lesson uses real data, and ends with exercises whose answers you can reveal when you are ready."
   },
   {
-    "objectID": "index.html#sign-up",
-    "href": "index.html#sign-up",
+    "objectID": "index.html#questions-and-feedback",
+    "href": "index.html#questions-and-feedback",
     "title": "Analysing Crop Disease Data in R",
-    "section": "Sign up",
-    "text": "Sign up\nRegistration opens soon. The link will appear here."
+    "section": "Questions and feedback",
+    "text": "Questions and feedback\nStuck, or found a mistake? Open an issue on GitHub and describe what happened. Feedback on what worked and what did not helps make the course better for the next student."
   },
   {
     "objectID": "index.html#run-by",
@@ -263,7 +263,7 @@
     "href": "credits.html#software-and-further-reading",
     "title": "Data and credits",
     "section": "Software and further reading",
-    "text": "Software and further reading\n\nR for Plant Disease Epidemiology by Emerson M. Del Ponte: an open textbook, and the best next step after this workshop.\nepifitter by Kaique Alves and Emerson Del Ponte, for fitting disease progress curves. Session 2 uses its powdery mildew data.\nR, RStudio, and the readxl, dplyr, ggplot2 and lme4 packages."
+    "text": "Software and further reading\n\nR for Plant Disease Epidemiology by Emerson M. Del Ponte: an open textbook, and the best next step after this workshop.\nepifitter by Kaique Alves and Emerson Del Ponte, for fitting disease progress curves. Lesson 2 uses its powdery mildew data.\nR, RStudio, and the readxl, dplyr, ggplot2 and lme4 packages."
   },
   {
     "objectID": "credits.html#licence-for-these-materials",
