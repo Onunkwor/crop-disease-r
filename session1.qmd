@@ -40,7 +40,7 @@ max(heights)
 
 **A table of data is called a data frame.** Each row is one thing (here, one field) and each column is one measurement. You will meet one in a moment.
 
-**Packages add extra tools.** You install them once (see [Get set up](setup.qmd)), and switch them on each session with `library()`.
+**Packages add extra tools.** You install them once (see [Get set up](setup.qmd)), and switch them on each time you start R with `library()`.
 
 That is all you need for today.
 

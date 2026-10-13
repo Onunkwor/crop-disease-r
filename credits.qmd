@@ -22,7 +22,7 @@ From Raphael Odera Onunkwor's final-year thesis at Bells University of Technolog
 ## Software and further reading
 
 - [R for Plant Disease Epidemiology](https://r4pde.net) by Emerson M. Del Ponte: an open textbook, and the best next step after this workshop.
-- [epifitter](https://cran.r-project.org/package=epifitter) by Kaique Alves and Emerson Del Ponte, for fitting disease progress curves. Session 2 uses its powdery mildew data.
+- [epifitter](https://cran.r-project.org/package=epifitter) by Kaique Alves and Emerson Del Ponte, for fitting disease progress curves. Lesson 2 uses its powdery mildew data.
 - R, RStudio, and the `readxl`, `dplyr`, `ggplot2` and `lme4` packages.
 
 ## Licence for these materials

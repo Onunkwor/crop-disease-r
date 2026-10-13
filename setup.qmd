@@ -39,4 +39,4 @@ It should print `512`.
 
 ## If you get stuck
 
-Do not worry if something does not install the first time; it happens to everyone. Bring the error message to the first session, and we will fix it together in the first ten minutes.
+Do not worry if something does not install the first time; it happens to everyone. Copy the exact error message into a search engine, which solves most problems. If you are still stuck, [open an issue on GitHub](https://github.com/Onunkwor/crop-disease-r/issues) and paste the message there.

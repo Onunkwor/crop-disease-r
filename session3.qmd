@@ -3,7 +3,7 @@ title: "3. Checking your own results"
 subtitle: "Is the difference real, and what did the survey miss?"
 ---
 
-This session is about the habit that matters most in science: **checking a result before you believe it**. We use two real examples, and the first one is the instructor's own mistake.
+This lesson is about the habit that matters most in science: **checking a result before you believe it**. We use two real examples, and the first one is the instructor's own mistake.
 
 ## Part 1: Do the varieties really differ?
 
@@ -73,7 +73,7 @@ The thesis claims about height differences between varieties had to be withdrawn
 
 ## Part 2: What a survey cannot see
 
-In Session 1 we counted diseased plants by their **symptoms**. But the WAVE researchers also took leaf samples back to the laboratory and **tested them for the virus itself**. That lets us ask: how many infected plants did the eye miss?
+In Lesson 1 we counted diseased plants by their **symptoms**. But the WAVE researchers also took leaf samples back to the laboratory and **tested them for the virus itself**. That lets us ask: how many infected plants did the eye miss?
 
 ```{r}
 library(readxl)

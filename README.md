@@ -1,8 +1,8 @@
 # Analysing Crop Disease Data in R
 
-A free three-session workshop for Nigerian plant-science students, built on real Nigerian crop data.
+A free, self-paced course for Nigerian plant-science students, built on real Nigerian crop data. Live at https://onunkwor.github.io/crop-disease-r/
 
-| Session | Topic |
+| Lesson | Topic |
 |---|---|
 | 1 | Reading disease data: incidence, severity, and where the infection came from |
 | 2 | How epidemics grow: the logistic curve, the t = 0 check, and fitting real data |

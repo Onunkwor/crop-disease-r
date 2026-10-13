@@ -7,7 +7,7 @@ website:
   site-url: "https://onunkwor.github.io/crop-disease-r/"
   repo-url: "https://github.com/Onunkwor/crop-disease-r"
   repo-actions: [issue]
-  description: "A free three-session workshop for Nigerian plant-science students, built on real Nigerian crop data."
+  description: "A free, self-paced course for Nigerian plant-science students, built on real Nigerian crop data."
   page-navigation: true
   navbar:
     left:

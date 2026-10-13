@@ -134,4 +134,4 @@ PowderyMildew |>
 - **Check every formula at $t = 0$.** It takes ten seconds and catches real errors.
 - Summarise a whole epidemic with one number, the AUDPC, so you can compare treatments.
 
-The ideas in this session follow the open textbook [*R for Plant Disease Epidemiology*](https://r4pde.net) by Emerson Del Ponte, which is the best next step if you want to go further.
+The ideas in this lesson follow the open textbook [*R for Plant Disease Epidemiology*](https://r4pde.net) by Emerson Del Ponte, which is the best next step if you want to go further.

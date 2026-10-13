@@ -1,11 +1,11 @@
 ---
 title: "Analysing Crop Disease Data in R"
-subtitle: "A free online workshop for Nigerian plant-science students"
+subtitle: "A free, self-paced course for Nigerian plant-science students"
 ---
 
 Every season, Nigerian farmers lose crops to disease that was only noticed once it was too late to stop. Seeing an outbreak early starts with being able to read disease data properly, and that is a skill most of us were never taught.
 
-This workshop teaches it in three short sessions, using **real Nigerian data**: a survey of cassava mosaic disease across 512 fields in 13 states, and a bean trial grown at Bells University of Technology.
+This course teaches it in three short lessons, using **real Nigerian data**: a survey of cassava mosaic disease across 512 fields in 13 states, and a bean trial grown at Bells University of Technology.
 
 ## Who it is for
 
@@ -13,21 +13,21 @@ Final-year and postgraduate students in plant science, agriculture, biotechnolog
 
 ## What you will learn
 
-| Session | Topic | You will be able to |
+| Lesson | Topic | You will be able to |
 |---|---|---|
 | 1 | [Reading disease data](session1.qmd) | load a real field survey, measure how much disease there is, and find where it came from |
 | 2 | [How epidemics grow](session2.qmd) | describe and fit the S-shaped curve of an epidemic, and check a model with one simple test |
 | 3 | [Checking your own results](session3.qmd) | test whether a result is real before you report it, and share your work so others can check it |
 
-## Format
+## How it works
 
-- **Three online sessions** of about 90 minutes each. Dates are to be announced.
-- **Free.** You can run everything in your web browser, so you do not need a powerful laptop. See [Get set up](setup.qmd).
-- **Every session is recorded**, and all the materials stay on this site, so you can catch up later or work through it on your own.
+- **Self-paced.** Work through the three lessons in order, whenever suits you. Each takes about 90 minutes.
+- **Free, with nothing to install.** You can run everything in your web browser, so you do not need a powerful laptop. See [Get set up](setup.qmd).
+- **Learn by doing.** Every lesson uses real data, and ends with exercises whose answers you can reveal when you are ready.
 
-## Sign up
+## Questions and feedback
 
-Registration opens soon. The link will appear here.
+Stuck, or found a mistake? [Open an issue on GitHub](https://github.com/Onunkwor/crop-disease-r/issues) and describe what happened. Feedback on what worked and what did not helps make the course better for the next student.
 
 ## Run by
 
